@@ -1,2 +1,179 @@
-# holo-card-studio
-Turn the user's description or uploaded reference into a finished, editable Blender card and an interactive Three.js page. Preserve the requested subject, style, typography and destination. This skill contains code and text only; generated artwork belongs in the user's output project.
+# ✨ Holo Card Studio
+
+> 一句话描述、一张参考图，换一张会"动"的 3D 全息闪卡。
+> 在浏览器里拖一拖、翻一翻，那种小时候在文具店门口舍不得买的闪卡，现在你自己就能造。
+
+**Holo Card Studio** 是一个 Claude Skill：把你的想法（或参考图）变成一张 **可编辑的 Blender 卡片** + 一个 **能交互的 Three.js 网页**。视差、镭射彩虹、闪光线稿、星星粒子——该有的都有，还能在 Blender 里继续折腾。
+
+---
+
+## 🎯 它能干什么
+
+| 你给它 | 它还你 |
+|---|---|
+| 一段描述（"赛博朋克风的机械猫，背景是霓虹雨夜"） | 分层画好的 4 张图 |
+| 或一张参考图（保留主体、构图和风格） | 一个 `card.blend`，材质节点随便改 |
+| 卡片文字、标题、编号等元数据 | 一个本地跑起来的 Three.js 网页，能拖、能翻、能调滑块 |
+| — | 渲染图若干，拿去炫耀 |
+
+**不会替你决定的事**：卡片不一定是二次元、不一定是日系、也不会默认照着"启发这个 skill 的那个例子"去画。你说什么风格，它就画什么风格。
+
+---
+
+## 🧱 一张卡是怎么"叠"出来的
+
+一张全息卡其实是四层图叠在同一块画布上，然后用视差把它们"撑开"：
+
+```
+        👀 你的视线
+         │
+   ┌─────┴─────┐
+   │  text.png │  文字层        scale 1    depth 0
+   ├───────────┤
+   │lineart.png│  线稿层        （发光的那层，稀疏遮罩）
+   ├───────────┤
+   │subject.png│  主体层        scale 1.25 depth 0.4   ← 往前凸
+   ├───────────┤
+   │background │  背景层        depth -0.25            ← 往后缩
+   └───────────┘
+```
+
+Blender 那边有一个共享节点组，输入叫 `缩放` 和 `深度`，输出叫 `视差效果`——名字是中文的，别惊讶，这是刻意的。
+
+---
+
+## 🚀 工作流：七步走完
+
+### 1️⃣ 立项 + 写卡片规格
+先确定输出项目在哪，然后写一份紧凑的卡片规格。缺的无伤大雅的设计细节（比如边框颜色）它会自己猜一个并**明说**，不会偷偷替你做主。
+
+> 📖 参考：`references/art-direction.md` —— 分层画图的提示词写法、参考图怎么处理。
+
+### 2️⃣ 画图：主体 / 背景 / 线稿 / 文字
+用内置的图像生成工具画出：
+
+- `assets/subject.png` —— 主体（透明背景）
+- `assets/background.png` —— 背景
+- `assets/lineart.png` —— **对齐的**线稿
+- `assets/text.png` —— 用 `scripts/generate_typography.py` 生成的精确透明文字层
+
+上传了参考图？它会先仔细看图，再保留你要的身份和构图。
+**绝不会**偷偷换成一个要 API key 或者要付费的服务。
+
+### 3️⃣ 写配置 + 验资产
+照着 `references/config.example.json` 的样子，把你的元数据写进 `<project>/card-config.json`。
+然后跑：
+
+```bash
+python scripts/validate_assets.py <project>
+```
+
+再肉眼检查一遍透明度和对齐。两个经典翻车点：
+
+- 🟥 **画出来的棋盘格不是透明**，它只是一张画着棋盘格的图。
+- 🟥 **新生成的线稿可能"漂"了**，和主体对不上。先和原图比对，不对就重画，不然发光轮廓会跑到脸外面去。
+
+### 4️⃣ 一键流水线
+```bash
+python scripts/run_pipeline.py --project <project>
+```
+
+这一步会：找 Blender → 没有就把官方便携版装到 `<project>/tools` → 生成可编辑场景 → 从场景导出几何 → 组装 Three.js 网站。
+
+**需要**：Python（带 Pillow）、Node.js、npm。
+缺依赖会报错，报错就去看报错，不要嘴硬说"完成了"，也不要对着同一个坑反复跳。
+
+### 5️⃣ 本地跑起来 + 真·测试
+```bash
+node <project>/web/server.mjs
+```
+
+保持进程活着，打开它返回的 localhost 地址。
+然后按 `references/verification.md` **真的去测**：渲染、拖拽、翻面、滑块效果、手机布局。
+
+> ⚠️ 一个 "ready" 标志证明不了 shader 编译成功，也证明不了画面好看。眼睛才是最终验收。
+
+### 6️⃣（可选）在 Blender 里打开看看
+打开 `<project>/card.blend`，确认窗口能看见、界面语言对。
+默认界面语言是**简体中文**，存在项目本地的便携配置里；想换语言的话重新确认一下用户意图。
+小提示：短命的启动器会把子进程一起带走，记得保住那个长跑的进程。
+
+### 7️⃣ 交付
+你会拿到：可用的 URL、源项目、可编辑的 `.blend`、渲染图。
+
+同时会诚实告诉你一件事：**Blender 里的自定义 shader 节点图不会通过 glTF 直接传到网页**，网页端是用 Three.js 重建的。效果一样闪，路径不一样。
+
+网站/仓库只在你要求时才发布。要打包 skill 的 ZIP 用 `scripts/package_skill.py`，它有白名单：只打包文本，不带输出项目、图片、内嵌图片的模型、凭据、依赖和缓存。
+
+---
+
+## 🧠 那些"不显眼但一动就炸"的规则
+
+写在这里，是因为它们每一条背后都有一次翻车。
+
+| 规则 | 为什么 |
+|---|---|
+| 所有图片平面建在 XY 平面，物体旋转 X=90°，**别 apply** | 直接改网格去模拟旋转会把局部坐标轴搞乱 |
+| 默认参数：主体 scale 1.25 / depth 0.4，背景 depth -0.25，文字 scale 1 / depth 0 | 这套数值是调好的"出厂手感" |
+| 布局安全映射（给文字留位置）和用户的视差控制**分开放** | 混在一起你调一个另一个就崩 |
+| 光靠 UV 居中 + 法线变换做不出真正的视角视差 | 还得把视线方向变换到卡片平面、除以有界的法线分量、再按带符号的深度偏移 UV |
+| 正面材质用主体 Alpha 混合背景和主体 BSDF；metallic=1、roughness=1 | 别用夸张的 emission 掩盖烂材质 |
+| 镭射用映射条纹（scale ≈ 0.55、distortion 7、mapping Y ≈ 32°）+ 独立图案映射 + Multiply/Add + 粉黄蓝白 ramp + Overlay | 光谱相位必须**随视角变**，不能只随时间变——不然是屏保不是闪卡 |
+| 主体 BSDF 的 emission 保持黑色；条纹发光和去饱和阈值线稿发光**分开叠加** | 线稿节点强度可以到 40，但必须稀疏遮罩，否则印刷细节全糊 |
+| 星星 = Voronoi 到边距离 + 动画噪声；卡片侧面用独立材质槽；合成器辉光用高质量 | 便宜的辉光一眼假 |
+| 导出**真实的** Blender 几何，不是截图冒充模型 | 材质名 `web_front` / `web_edge` / `web_back` / `web_gold` 是和浏览器的契约 |
+| glTF 转 Y-up 会改局部坐标轴；`uView` 用卡片根节点的规范坐标系，不用转换后前面网格的局部系；V 坐标只还原**一次** | 两个方向都转一下，抓拖影和反向视差 |
+
+---
+
+## 📦 目录里都有什么
+
+```
+holo-card-studio/
+├── SKILL.md                      # 就是这个 skill 的"大脑"
+├── references/
+│   ├── art-direction.md          # 怎么写分层画图提示词
+│   ├── config.example.json       # 卡片配置示例
+│   └── verification.md          # 验收清单
+├── scripts/
+│   ├── ensure_blender.py         # 找官方 Blender、校验 SHA-256、解压到项目本地
+│   ├── build_card.py             # 生成可编辑的 Blender 场景
+│   ├── export_web.py             # 从场景导出几何
+│   ├── generate_typography.py    # 精确的透明文字层
+│   ├── validate_assets.py        # 资产体检
+│   ├── run_pipeline.py           # 一键流水线
+│   └── package_skill.py          # 文本白名单打包 + ZIP 校验
+└── assets/
+    └── web-template/             # 响应式 Three.js 查看器（不含任何画作）
+```
+
+> 🧼 这个 skill 里**只有代码和文字**。生成的画作、`.blend`、模型文件都属于你的输出项目，不会被塞回 skill 里。
+
+---
+
+## 🔧 环境要求
+
+- Python 3 + Pillow
+- Node.js + npm
+- Blender：**不用自己装**，流水线会把官方便携版放到 `<project>/tools`
+- 一个能生成图像的工具（内置的那个）
+
+---
+
+## ❓ FAQ
+
+**Q：我的卡为什么"闪"得像屏保？**
+A：光谱相位只随时间变、没随视角变。回去看"不显眼规则"表第 6 条。
+
+**Q：线稿发光把角色脸糊掉了。**
+A：线稿 emission 没做稀疏遮罩，或者线稿本身漂了。先比对原图重画，再检查遮罩。
+
+**Q：网页里拖的时候有拖影 / 视差方向反了。**
+A：八成是 `uView` 用了转换后前面网格的局部坐标系，或者 V 坐标被还原了两次。两个方向都转一下复现。
+
+**Q：能把 Blender 的材质直接导到网页吗？**
+A：不能，glTF 不带自定义节点图。网页端是 Three.js 重建的四层合成，UV 公式和 Blender 一致。
+
+---
+
+*做一张自己的闪卡吧。这次不用求爸妈了。* 🃏
