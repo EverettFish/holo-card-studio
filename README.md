@@ -1,5 +1,7 @@
 # 🃏 Holo Card Studio
 
+[English](README.en.md)
+
 实现教程来源（补上，感谢大佬的教程）：小红书@乌托邦的香蕉🍌
 
 > 一个 **Codex Skill**：对 Codex 说一句话，收获一张会随视角流光溢彩的 3D 全息闪卡。
