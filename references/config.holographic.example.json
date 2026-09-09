@@ -1,0 +1,19 @@
+{
+  "mode": "holographic",
+  "title": "你的角色",
+  "subtitle": "角色称号",
+  "technique": "招式名称",
+  "tagline": "招式说明",
+  "edition": "001 / 001",
+  "collection": "个人全息典藏",
+  "description": "全彩浮世绘与水墨动漫勾勒的多层镭射收藏卡。",
+  "parameters": {
+    "subjectScale": 1.25,
+    "subjectDepth": 0.4,
+    "backgroundDepth": -0.25,
+    "foil": 1.0,
+    "particles": 1.0,
+    "glow": 0.85
+  },
+  "safeArea": {"scale": 1.12, "offset": [-0.06, -0.085]}
+}

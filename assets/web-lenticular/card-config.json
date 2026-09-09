@@ -1,0 +1,45 @@
+{
+  "title": "角色 · 一念神魔",
+  "subtitle": "彩墨浮世绘",
+  "technique": "晨星 / 业火",
+  "tagline": "同一形象 · 双重形态",
+  "edition": "003",
+  "collection": "TATA",
+  "description": "两张完整的彩色浮世绘卡面，以同一构图在观看角度中切换。",
+  "states": {
+    "a": {
+      "label": "天使",
+      "caption": "晨星之息"
+    },
+    "b": {
+      "label": "魔鬼",
+      "caption": "业火之息"
+    }
+  },
+  "assets": {
+    "model": "./assets/card.glb",
+    "imageA": "./assets/image_a.png",
+    "imageB": "./assets/image_b.png",
+    "text": "./assets/text.png"
+  },
+  "lenticular": {
+    "flipAngle": 18,
+    "softness": 0.30,
+    "pitch": 120,
+    "stripe": 0.22,
+    "sweep": 4,
+    "refract": 0.3,
+    "ridge": 0.5,
+    "depth": 0.03,
+    "foil": 0.48,
+    "cycle": false
+  },
+  "version": 3,
+  "effects": {
+    "particles": 0.65,
+    "glow": 0.65
+  },
+  "identity": {
+    "method": "A from reference; B edited from A"
+  }
+}

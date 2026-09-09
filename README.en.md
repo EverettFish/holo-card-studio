@@ -159,6 +159,29 @@ python scripts/package_skill.py
 
 It packs text files only, by whitelist. The resulting ZIP is clean and ready to hand over.
 
+## 🔀 New: two-image lenticular cards
+
+Alongside the original single-art holographic route, the skill can now build lenticular flip cards, dual-state cards, and benevolent-versus-malevolent transformations.
+
+This route uses two **complete card artworks**. The whole image changes from A to B with viewing angle; it does not split one picture into left and right halves. Without a reference, the default is full-color Japanese ukiyo-e composition with colored sumi-e anime linework. With a reference, the workflow generates A first and edits A into B while locking facial structure, proportions, costume anchors, framing, and subject scale.
+
+The Blender file contains a physical card base plus separate image, lenticular ridge, holographic foil, line glow, and diamond-particle layers. The web viewer loads the GLB exported from Blender and drives the same full-card view-angle transition with mouse and touch tilt.
+
+~~~bash
+python scripts/run_pipeline.py --project <project-dir> --mode lenticular
+~~~
+
+A lenticular project uses:
+
+~~~text
+assets/image_a.png
+assets/image_b.png
+assets/text.png
+card-config.json
+~~~
+
+The pipeline delivers card.blend, front/angled renders, web/assets/card.glb, the flat white Three.js viewer, and a validation report. The original holographic route remains available with --mode holographic; mode in card-config.json can select either route automatically.
+
 ---
 
 *So, who's on your first card?* ✨

@@ -1,6 +1,4 @@
 interface:
-  display_name: "3D 镭射卡工坊"
-  short_description: "从描述或参考图片生成 Blender 卡牌与可交互的 Three.js 镭射网页"
-  default_prompt: "使用 $holo-card-studio 根据我的描述或参考图片制作一张可拖动翻面的 3D 全息卡牌网页。"
-policy:
-  allow_implicit_invocation: true
+  display_name: "Holo Card Studio"
+  short_description: "多层镭射卡与双图一念神魔光栅卡"
+  default_prompt: "Create a finished collectible card project. Use the holographic multilayer route for one artwork, or the two-image lenticular route for 光栅、双形态、and 一念神魔. Default to full-color ukiyo-e with colored sumi-e anime linework, preserve character identity, make good and evil expressions unmistakable, and maximize foil and diamond sparkle while keeping the face readable."

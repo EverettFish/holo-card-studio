@@ -1,0 +1,30 @@
+{
+  "mode": "lenticular",
+  "title": "角色 · 一念神魔",
+  "subtitle": "全彩浮世绘 · 水墨动漫勾勒",
+  "technique": "神圣 / 业火",
+  "tagline": "同一形象 · 双重形态",
+  "edition": "001",
+  "collection": "一念神魔",
+  "description": "两张完整收藏级卡面随观看角度切换。",
+  "states": {
+    "a": {"label": "仙道", "caption": "神圣慈悲"},
+    "b": {"label": "妖魔", "caption": "地狱业火"}
+  },
+  "lenticular": {
+    "flipAngle": 18,
+    "softness": 0.30,
+    "pitch": 120,
+    "stripe": 0.22,
+    "sweep": 4,
+    "refract": 0.3,
+    "ridge": 0.5,
+    "depth": 0.03,
+    "foil": 1.0,
+    "cycle": false
+  },
+  "effects": {"particles": 1.0, "glow": 0.85},
+  "identity": {
+    "method": "Generate A, then edit A into B while locking identity, framing, and major geometry"
+  }
+}

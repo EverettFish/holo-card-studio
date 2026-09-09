@@ -161,6 +161,29 @@ python scripts/package_skill.py
 
 它按白名单只打包文本文件，打出来的 ZIP 干干净净，拿走就能用。
 
+## 🔀 新功能：双图光栅卡
+
+现在除了原有的单图全息镭射卡，还可以制作光栅卡、翻转卡、双形态卡和一念神魔。
+
+这条路线使用两张**完整卡面**：A 图与 B 图会随观看角度切换整张画面，不是把一张图切成左右两半。无参考图时默认采用全彩日式浮世绘构成与水墨动漫勾线；有参考图时先生成 A，再以 A 为身份锚点编辑出 B，锁定脸型、比例、服装锚点、镜头与主体尺度。
+
+Blender 工程包含实体卡基、图像层、柱镜光栅、镭射膜、轮廓光、闪钻粒子等独立层。网页加载 Blender 导出的 GLB，用同一套视角公式驱动整卡切换，并支持鼠标与触控倾斜。
+
+~~~bash
+python scripts/run_pipeline.py --project <project-dir> --mode lenticular
+~~~
+
+光栅项目使用：
+
+~~~text
+assets/image_a.png
+assets/image_b.png
+assets/text.png
+card-config.json
+~~~
+
+流水线会交付 card.blend、正视/倾斜渲染、web/assets/card.glb、白底 Three.js 查看器和验证报告。原有全息路线继续使用 --mode holographic，也可以通过 card-config.json 的 mode 自动选择。
+
 ---
 
 *想好第一张卡画谁了吗？* ✨
