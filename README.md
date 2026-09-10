@@ -112,6 +112,14 @@ Codex 会先把卡片规格和它推断的细节说给你听，然后开工：�
 | `card-config.json` | 改名字、改编号、改稀有度 |
 | 渲染图 | 直接发 |
 
+### 多张卡：自动分类展厅
+
+需要持续生成和分发多张卡时，可以把每张流水线产物归档为独立目录，再由清单生成器汇总成瀑布流展厅。每张卡保留永久 URL，主页则按人物、风格、主题和稀有度自动生成筛选项。
+
+- 在线示例：<https://card.waterq.us/>
+- 配套项目：<https://github.com/chenweilie/holo-card-gallery>（私有仓库，需要所有者授权）
+- 接入规范：[多卡展厅与自动分类](references/gallery-distribution.md)
+
 ---
 
 ## 🔧 可以调的旋钮
