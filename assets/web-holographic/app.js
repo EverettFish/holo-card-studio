@@ -56,8 +56,9 @@ const edgeFragment=shared+`void main(){vec3 col=mix(vec3(.55,.34,.1),spectrum(wa
 #include <tonemapping_fragment>
 #include <colorspace_fragment>
 }`;
+// The rear shares the front UVs; compensate for viewing it from the opposite side.
 const backFragment=shared+`uniform sampler2D tBack;
-void main(){vec4 art=texture2D(tBack,vUv);vec2 p=vUv-.5;float filigree=.5+.5*sin(length(p*vec2(1.,1.5))*100.+noise(p*15.)*4.);vec3 col=mix(vec3(.025,.042,.064),vec3(.085,.092,.11),filigree*.35);float border=step(.465,max(abs(p.x),abs(p.y)));col=mix(col,spectrum(wave(vUv))*.55,border);col+=spectrum(wave(vUv))*uFoil*.08;col=mix(col,art.rgb,art.a);gl_FragColor=vec4(pow(col,vec3(2.2)),1.);
+void main(){vec4 art=texture2D(tBack,vec2(1.-vUv.x,vUv.y));vec2 p=vUv-.5;float filigree=.5+.5*sin(length(p*vec2(1.,1.5))*100.+noise(p*15.)*4.);vec3 col=mix(vec3(.025,.042,.064),vec3(.085,.092,.11),filigree*.35);float border=step(.465,max(abs(p.x),abs(p.y)));col=mix(col,spectrum(wave(vUv))*.55,border);col+=spectrum(wave(vUv))*uFoil*.08;col=mix(col,art.rgb,art.a);gl_FragColor=vec4(pow(col,vec3(2.2)),1.);
 #include <tonemapping_fragment>
 #include <colorspace_fragment>
 }`;
