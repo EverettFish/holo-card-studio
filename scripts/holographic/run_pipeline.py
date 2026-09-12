@@ -1,6 +1,6 @@
 """Build a user-owned Blender/Three.js project from prepared layered artwork."""
 from pathlib import Path
-import argparse,json,shutil,subprocess,sys
+import argparse,json,shutil,subprocess,sys,os
 from ensure_blender import ensure_blender
 from validate_assets import validate
 from generate_typography import create
@@ -12,11 +12,12 @@ def main():
     if not config.exists():raise FileNotFoundError('Write card-config.json from references/config.example.json first')
     if not (root/'assets'/'text.png').exists():create(root)
     validate(root);blender=ensure_blender(root,a.blender)
-    cmd=[str(blender),'--background','--factory-startup','--python',str(scripts/'build_card.py'),'--',str(root)]
+    env=os.environ.copy();prefs=root/'tools'/'blender-config';prefs.mkdir(parents=True,exist_ok=True);env['BLENDER_USER_CONFIG']=str(prefs)
+    cmd=[str(blender),'--background','--factory-startup','--python-exit-code','1','--python',str(scripts/'build_card.py'),'--',str(root)]
     if a.skip_render:cmd.append('--skip-render')
-    subprocess.run(cmd,check=True)
+    subprocess.run(cmd,check=True,env=env)
     if not (root/'card.blend').exists():raise RuntimeError('Blender did not save card.blend; inspect its log')
-    subprocess.run([str(blender),'--background','--python',str(scripts/'export_web.py'),'--',str(root)],check=True)
+    subprocess.run([str(blender),'--background','--factory-startup','--python-exit-code','1','--python',str(scripts/'export_web.py'),'--',str(root)],check=True,env=env)
     if not (root/'web'/'assets'/'card.glb').exists():raise RuntimeError('GLB export failed')
     web=root/'web';shutil.copytree(skill/'assets'/'web-holographic',web,dirs_exist_ok=True)
     cfg=json.loads(config.read_text(encoding='utf-8-sig'));cfg['assets']={name:'./assets/'+name+'.png' for name in ['subject','background','text','lineart']};cfg['assets']['model']='./assets/card.glb'

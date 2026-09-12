@@ -72,7 +72,7 @@ Four layers share one canvas, and parallax pushes them apart in space:
 ```
 
 On top of that: laser rainbow (phase follows your viewing angle, so it flares wherever you turn), Voronoi sparkle, gold card edge.
-The browser side rebuilds the same four-layer composite with the same UV math via Three.js, so what you see in Blender is what you get on the page.
+The browser rebuilds the four-layer composite with the same UV math via Three.js, reproducing the parallax and foil effect. Web shading and Blender's offline lighting differ, so colors, glow, and back artwork are not identical.
 
 ---
 
@@ -89,6 +89,22 @@ Drop this directory into your Codex skills folder:
 - Python 3 + Pillow
 - Node.js + npm
 - Blender: **no manual install needed**. The pipeline pulls the official portable build into `<project>/tools/`, verifies the SHA-256, and keeps it project-local so nothing conflicts.
+
+An installed Blender is reused first; use `--blender` to select an executable.
+The holographic route handles both legacy compositor nodes and newer compositor
+groups, and can use Metal on macOS. Preferences stay in the project's
+`tools/blender-config/` directory.
+
+Once the assets and config are ready, run:
+
+```sh
+python scripts/run_pipeline.py --project <project-dir> --mode holographic
+```
+
+Without `--mode`, the dispatcher reads the config's `mode`, falling back to
+`holographic` when that field is absent. `--skip-render` skips still rendering;
+`--skip-npm` skips web dependency installation. See the
+[verification guide](references/verification.md) for runtime, render, and browser checks.
 
 ### Just ask
 Then talk to Codex in plain language:

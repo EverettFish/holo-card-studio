@@ -74,7 +74,7 @@ Codex：
 ```
 
 再铺上镭射彩虹（相位跟着视角走，转到哪闪到哪）、Voronoi 星光、金色卡边。
-浏览器端用 Three.js 按同一套 UV 公式重建这四层合成，所以 Blender 里看到什么，网页里就是什么。
+浏览器端用 Three.js 按同一套 UV 公式重建这四层合成，呈现相同类型的视差和镭射效果；网页着色与 Blender 离线灯光不同，颜色、辉光和背面装饰会有差异。
 
 ---
 
@@ -91,6 +91,16 @@ Codex：
 - Python 3 + Pillow
 - Node.js + npm
 - Blender **不用自己装** —— 流水线会自动把官方便携版放到 `<project>/tools/`，校验 SHA-256，项目自带、互不干扰
+
+已有 Blender 时会优先复用，也可用 `--blender` 指定可执行文件。全息路线适配旧版合成节点和新版合成节点组，macOS 可使用 Metal；偏好设置保存在项目的 `tools/blender-config/`。
+
+准备好素材与配置后，可以直接运行：
+
+```sh
+python scripts/run_pipeline.py --project <project-dir> --mode holographic
+```
+
+不写 `--mode` 时读取配置中的 `mode`，配置也没有时默认 `holographic`。`--skip-render` 跳过静态渲染，`--skip-npm` 跳过网页依赖安装。查看[验收说明](references/verification.md)了解实际运行、渲染和浏览器检查的范围。
 
 ### 开口
 然后在 Codex 里直接说人话：

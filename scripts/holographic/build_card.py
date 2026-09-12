@@ -2,6 +2,8 @@ import bpy, math, os, json
 from pathlib import Path
 from mathutils import Vector, Quaternion
 import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from blender_compat import configure_compositor, configure_cycles_device
 args=sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else []
 R=Path(args[0]).resolve() if args else Path.cwd()
 CFG=json.loads((R/'card-config.json').read_text(encoding='utf-8-sig'))
@@ -12,14 +14,7 @@ for g in list(bpy.data.node_groups):
 scene=bpy.context.scene
 scene.render.engine='CYCLES'; scene.cycles.samples=32
 scene.cycles.use_denoising=True
-try:
-    prefs=bpy.context.preferences.addons['cycles'].preferences
-    prefs.compute_device_type='OPTIX'; prefs.get_devices()
-    gpu=False
-    for dev in prefs.devices:
-        dev.use=dev.type!='CPU'; gpu=gpu or dev.use
-    if gpu: scene.cycles.device='GPU'
-except Exception as e: print('GPU fallback',e)
+configure_cycles_device(scene)
 scene.render.resolution_x=1080; scene.render.resolution_y=1500; scene.render.resolution_percentage=100
 scene.render.image_settings.file_format='PNG'; scene.render.image_settings.color_mode='RGBA'
 scene.render.film_transparent=False
@@ -208,7 +203,7 @@ bpy.ops.object.camera_add(location=(0,-20,0)); cam=bpy.context.object; cam.name=
 for name,loc,energy,size,color in [('柔光主灯',(-3,-8,4),2100,9,(1,.90,.72)),('正面均匀补光',(3,-7,-2),1650,8,(.72,.85,1)),('顶部金光',(0,-4,7),800,5,(1,.70,.32))]:
     bpy.ops.object.light_add(type='AREA',location=loc); o=bpy.context.object; o.name=name; o.data.energy=energy; o.data.shape='DISK'; o.data.size=size; o.data.color=color; aim(o,(0,0,0))
 # Compositor glow.
-scene.use_nodes=True; ct=scene.node_tree; ct.nodes.clear(); rl=node(ct,'CompositorNodeRLayers','渲染层',0,0); gl=node(ct,'CompositorNodeGlare','辉光 · 高质量',250,0); gl.glare_type='FOG_GLOW'; gl.quality='HIGH'; gl.threshold=1.5; gl.size=8; co=node(ct,'CompositorNodeComposite','最终图像',510,0); link(ct,rl,'Image',gl,'Image'); link(ct,gl,'Image',co,'Image')
+configure_compositor(scene)
 # Portable Chinese interface and ready-to-open camera view.
 try:
     bpy.context.preferences.view.language='zh_HANS'
