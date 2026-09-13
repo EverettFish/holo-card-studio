@@ -16,3 +16,5 @@ node_modules/
 *.gltf
 *.mp4
 *.zip
+*.task
+*.download

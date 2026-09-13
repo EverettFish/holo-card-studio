@@ -54,6 +54,12 @@ without claiming identical pixels or identical back artwork.
 
 ## Focused source checks
 
+For optional webcam control, follow [gesture-control.md](gesture-control.md).
+Run the add-on installer against an existing holographic card and inspect its
+separate viewer. Report synthetic gesture checks, real model execution, and
+human camera feedback as different evidence. Do not rerun image generation or
+Blender simply to add this presentation extension.
+
 Run `python -m unittest discover -s tests -v` in a Python environment with Pillow.
 These checks cover mode selection, argument forwarding, invalid configuration,
 and stopping after a failed build even when stale outputs exist. They do not
