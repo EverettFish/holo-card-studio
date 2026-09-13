@@ -201,3 +201,24 @@ The pipeline delivers card.blend, front/angled renders, web/assets/card.glb, the
 ---
 
 *So, who's on your first card?* ✨
+
+## Optional webcam gesture control
+
+Add a separate gesture viewer to a finished holographic card:
+
+```bash
+python scripts/add_gestures.py --project <finished-card-project>
+cd <finished-card-project>/web-gesture
+npm start
+```
+
+Spread both hands to enlarge the whole card and return to its front, bring them
+together to shrink, or touch and quickly release the thumb and middle finger to
+toggle continuous rotation after the ready cue. The visual snap is experimental;
+keep the existing pointer, keyboard, and button controls available.
+
+The original card assets and viewer stay intact. Camera access is off by default
+and explicitly enabled by the user. Processing is local, with no microphone,
+recording, or upload. The model is downloaded and hash-checked during project
+setup, not distributed inside the text-only skill. Holographic cards are supported;
+lenticular integration is not included. See [setup, tuning, and real-use checks](references/gesture-control.md).

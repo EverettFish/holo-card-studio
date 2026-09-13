@@ -1,0 +1,6 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>手势卡 · 受控浏览器验证</title><style>
+body{margin:28px;font:15px/1.7 system-ui;color:#23312e;background:#f8f9f7}h1{font-size:24px}button{padding:12px 20px;font:inherit;cursor:pointer}pre{white-space:pre-wrap;background:white;padding:18px;border:1px solid #ccc}iframe{width:1100px;height:850px;max-width:100%;border:1px solid #ddd}video{width:160px;height:120px;display:none}</style></head><body>
+<h1>手势卡 · 受控浏览器验证</h1><p>生成的空白画面 → 真实 MediaPipe Worker；可控页面操作 → 现有 Three.js 场景。不请求摄像头，不代表真人动作识别通过。</p>
+<button id="run">运行受控浏览器验证</button> <a href="./">返回手势卡</a><p id="performance"></p><pre id="result" role="status">尚未运行</pre>
+<video id="synthetic-video" muted playsinline></video><iframe id="app" src="./" title="接受受控操作的全息卡"></iframe>
+<script type="module" src="./check/browser-check.js"></script></body></html>

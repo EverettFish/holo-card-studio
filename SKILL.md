@@ -1,11 +1,15 @@
 ---
 name: holo-card-studio
-description: Create collectible holographic foil cards and two-image lenticular flip cards with AI-generated full-color ukiyo-e and colored sumi-e anime artwork, layered Blender scenes, renders, GLB export, and a flat white web viewer. Use for 镭射卡、闪卡、全息卡、光栅卡、一念神魔、双形态卡、角色收藏卡，或需要保持角色高度一致的 A/B 状态切换。
+description: Create collectible holographic foil cards and two-image lenticular flip cards with AI-generated full-color ukiyo-e and colored sumi-e anime artwork, layered Blender scenes, renders, GLB export, and a flat white web viewer. Add optional local webcam gesture control to finished holographic cards. Use for 镭射卡、闪卡、全息卡、光栅卡、一念神魔、双形态卡、角色收藏卡、手势赏卡，或需要保持角色高度一致的 A/B 状态切换。
 ---
 
 # Holo Card Studio
 
 Create a finished collectible card project. The skill has two production routes that share one art direction and one delivery standard.
+
+For an existing card that only needs gesture interaction, go directly to
+[references/gesture-control.md](references/gesture-control.md). Reuse its finished
+images and GLB; image generation and Blender rebuilding are unnecessary.
 
 ## Route first
 
@@ -70,6 +74,20 @@ python scripts/run_pipeline.py --project <project-dir> --mode lenticular
 
 For lenticular projects, run `scripts/lenticular/prepare_pair.py` before the pipeline when normalization or an alignment report is needed. The pipeline creates typography when `text.png` is absent, validates assets, builds `card.blend`, renders previews, exports `web/assets/card.glb`, copies the matching web viewer, and installs its local web dependencies unless `--skip-npm` is supplied.
 
+## Optional gesture presentation
+
+When the user asks for 手势赏卡、隔空控制、双手缩放 or 响指转卡, read
+[references/gesture-control.md](references/gesture-control.md) after the
+holographic web export is ready. Run `python scripts/add_gestures.py --project
+<project-dir>` to create a separate `web-gesture/` viewer. Keep the original
+viewer intact. The first version supports the holographic route; do not silently
+convert a lenticular card or promise untested gesture mappings.
+
+Deliver whole-card zoom, enlarge-to-front, and an experimental visual snap that
+toggles rotation, with explicit camera enable/stop and pointer/button fallback.
+Verify the generated page in a browser and record real-user feedback separately
+from synthetic gesture tests. Keep the camera off until the user enables it.
+
 ## Verify and deliver
 
 Read [references/verification.md](references/verification.md). At minimum verify:
@@ -91,5 +109,4 @@ Deliver the source images, `card.blend`, renders, web viewer, and a validation r
 - [references/config.lenticular.example.json](references/config.lenticular.example.json): two-state config.
 - [references/lenticular-model.md](references/lenticular-model.md): view-angle model.
 - [references/verification.md](references/verification.md): render and browser acceptance checks.
-
 

@@ -1,0 +1,14 @@
+{
+  "name": "holo-card-studio-gesture-web",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs",
+    "setup:model": "node scripts/setup-model.mjs"
+  },
+  "dependencies": {
+    "@mediapipe/tasks-vision": "1.0.1",
+    "three": "0.180.0"
+  }
+}
